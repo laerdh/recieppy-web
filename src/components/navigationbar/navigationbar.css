@@ -1,0 +1,16 @@
+.navigation-header {
+    display: flex;
+    background-color: rgb(231, 231, 231);
+    font-size: calc(10px + 2vmin);
+    color: white;
+    padding: 16px;
+    justify-content: center;
+}
+
+.navigation-header-container {
+    align-self: center;
+    background-color: rgb(231, 231, 231);
+    font-size: calc(10px + 2vmin);
+    color: gray;
+    padding: 16px;
+}

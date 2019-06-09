@@ -1,0 +1,11 @@
+.chip {
+    height: 25px;
+    background-color: rgb(231, 231, 231);
+    padding: 0 12.5px;
+    font-size: 0.8em;
+    margin: 0 4px 0 4px;
+    line-height: 25px;
+    border-radius: 25px;
+    font-family: 'Fredoka One', cursive;
+    color: gray;
+}
