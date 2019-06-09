@@ -7,7 +7,7 @@ const CircleView = (props) => {
             {props.position !== 'bottom' &&
                 <div className="circle-left-box"></div>
             }
-            <div className="circle" style={{backgroundColor: props.color}}>{props.initial}</div>
+            <div className="circle" style={{backgroundColor: props.theme.color}}>{props.title}</div>
         </div>
     );
 }

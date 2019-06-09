@@ -1,0 +1,14 @@
+.rounded-button {
+    height: 24px;
+    background-color: rgb(231, 231, 231);
+    padding: 0 16px;
+    font-size: 0.9em;
+    line-height: 24px;
+    border-radius: 24px;
+    color: gray;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);
+}
+
+.rounded-button:hover {
+    cursor: pointer;
+}

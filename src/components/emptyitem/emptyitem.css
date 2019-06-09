@@ -1,0 +1,14 @@
+.empty-item {
+    display: flex;
+    width: 50vw;
+    border-radius: 4px;
+    border: 2px dashed lightgray;
+    justify-content: center;
+    align-items: center;
+}
+
+.empty-item-content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
