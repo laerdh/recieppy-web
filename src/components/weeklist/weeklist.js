@@ -6,7 +6,7 @@ import EmptyItem from '../emptyitem/emptyitem';
 import { format, isSameDay, getDay, eachDay, startOfWeek, endOfWeek } from 'date-fns';
 
 const nbLocale = require('date-fns/locale/nb');
-const mealsData = [
+const dummyData = [
     {
         date: new Date(2019, 5, 10),
         meal: {
@@ -34,8 +34,6 @@ const mealsData = [
 ]
 
 const WeekList = () => {
-    const now = new Date();
-    const [meals, setMeals] = useState(mealsData);
     const theme = [
         'rgb(232, 101, 100)',
         'rgb(132, 202, 220)',
@@ -44,10 +42,13 @@ const WeekList = () => {
         'rgb(132, 202, 220)',
         'rgb(232, 101, 100)',
         'rgb(132, 202, 220)',
-    ]
+    ]   
+    
+    const now = new Date();
+    const [mealItems, setMealItems] = useState(dummyData);
 
-    function onDragStart(ev, itemIndex) {
-        ev.dataTransfer.setData("itemIndex", itemIndex)
+    function onDragStart(ev, selectedItemIndex) {
+        ev.dataTransfer.setData("selectedItemIndex", selectedItemIndex)
     }
 
     function onDragOver(ev) {
@@ -55,11 +56,17 @@ const WeekList = () => {
     }
 
     function onDrop(ev, date) {
-        let itemIndex = ev.dataTransfer.getData("itemIndex")
+        let selectedItemIndex = ev.dataTransfer.getData("selectedItemIndex")
+        let existingItem = mealItems.find((item) => {
+            return isSameDay(date, item.date)
+        })
 
-        setMeals((prevState) => {
-            var newState = [...prevState]
-            newState[itemIndex].date = date
+        setMealItems((prevState) => {
+            const newState = [...prevState]
+            if (existingItem !== undefined) {
+                newState[mealItems.indexOf(existingItem)].date = prevState[selectedItemIndex].date
+            }
+            newState[selectedItemIndex].date = date
             return newState
         })
     }
@@ -73,22 +80,16 @@ const WeekList = () => {
     function getMealItem(item, date) {
         if (item === undefined) {
             return (
-                <div className="item-container"
-                    onDragOver={(e) => onDragOver(e)}
-                    onDrop={(e) => onDrop(e, date)}>
-                    <EmptyItem />    
-                </div>
+                <EmptyItem />    
             )
         }
 
         return (
-            <div className="item-container">
-                <MealItem
-                    onDragStart={(e) => onDragStart(e, meals.indexOf(item))}
-                    title={item.meal.title}
-                    description={item.meal.description}
-                />
-            </div>
+            <MealItem
+                onDragStart={(e) => onDragStart(e, mealItems.indexOf(item))}
+                title={item.meal.title}
+                description={item.meal.description}
+            />
         )
     }
 
@@ -96,13 +97,13 @@ const WeekList = () => {
         <div className="weeklist-container">
             {
                 eachDay(startOfWeek(now, { weekStartsOn: 1 }), endOfWeek(now, { weekStartsOn: 1 })).map((date, index) => {
-                    let meal = meals.find((item) => {
+                    let meal = mealItems.find((item) => {
                         return isSameDay(date, item.date)
                     })
 
                     let weekDayName = getLocalizedDayName(date)
                     let isLastElement = getDay(date) === 0
-                    
+
                     return (
                         <div className="container" key={index}>
                             <CircleView
@@ -110,7 +111,11 @@ const WeekList = () => {
                                 title={weekDayName}
                                 theme={theme[index]}
                             />
-                            {getMealItem(meal, date)}
+                            <div className="item-container"
+                                onDragOver={(e) => onDragOver(e)}
+                                onDrop={(e) => onDrop(e, date)}>
+                                {getMealItem(meal, date)}
+                            </div>
                         </div>
                     )
                 })
