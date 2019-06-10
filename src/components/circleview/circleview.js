@@ -4,10 +4,10 @@ import './circleview.css';
 const CircleView = (props) => {
     return (
         <div className="circle-container">
-            {props.position !== 'bottom' &&
+            {!props.isLastElement &&
                 <div className="circle-left-box"></div>
             }
-            <div className="circle" style={{backgroundColor: props.theme.color}}>{props.title}</div>
+            <div className="circle" style={{backgroundColor: props.theme}}>{props.title}</div>
         </div>
     );
 }
