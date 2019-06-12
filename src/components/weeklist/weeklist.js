@@ -43,7 +43,7 @@ const WeekList = () => {
         'rgb(232, 101, 100)',
         'rgb(132, 202, 220)',
     ]   
-    
+
     const now = new Date();
     const [mealItems, setMealItems] = useState(dummyData);
 
@@ -77,7 +77,7 @@ const WeekList = () => {
         return weekDayName
     }
 
-    function getMealItem(item, date) {
+    function getMealItem(item) {
         if (item === undefined) {
             return (
                 <EmptyItem />    
@@ -114,7 +114,7 @@ const WeekList = () => {
                             <div className="item-container"
                                 onDragOver={(e) => onDragOver(e)}
                                 onDrop={(e) => onDrop(e, date)}>
-                                {getMealItem(meal, date)}
+                                {getMealItem(meal)}
                             </div>
                         </div>
                     )

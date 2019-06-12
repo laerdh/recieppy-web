@@ -12,3 +12,22 @@
     flex-direction: column;
     text-align: center;
 }
+
+.droppable-entered {
+    -webkit-animation-name: enter-droppable;
+    -webkit-duration: 0.5s;
+    -webkit-animation-fill-mode: forwards;
+    animation-name: enter-droppable;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes enter-droppable {
+    from { background-color: rgb(247, 247, 247); }
+    to { background-color: rgb(235, 235, 235); }
+}
+
+@-webkit-keyframes enter-droppable {
+    from { background-color: rgb(247, 247, 247); }
+    to { background-color: rgb(235, 235, 235); }
+}
