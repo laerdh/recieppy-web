@@ -1,4 +1,4 @@
-.meal-item {
+.recipe-item {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -10,22 +10,22 @@
     color: rgb(118, 118, 118);
 }
 
-.meal-item:hover {
+.recipe-item:hover {
     cursor: pointer;
 }
 
-.meal-item-today {
+.recipe-item-today {
     padding: 8px;
 }
 
-.meal-header {
+.recipe-header {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     padding: 8px;
 }
 
-.meal-thumbnail {
+.recipe-thumbnail {
     width: 48px;
     height: 48px;
     min-width: 48px;
@@ -33,23 +33,23 @@
     border-radius: 24px;
 }
 
-.meal-header-content {
+.recipe-header-content {
     flex-direction: row;
     margin-left: 16px;
 }
 
-.meal-title {
+.recipe-title {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.meal-description {
+.recipe-description {
     font-size: 0.9em;
     font-family: Arial, Helvetica, sans-serif;
     padding: 8px;
 }
 
-.meal-chip-container {
+.recipe-chip-container {
     display: inline-flex;
     padding: 8px;
     margin: 0 -4px 0 -4px;

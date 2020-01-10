@@ -5,7 +5,7 @@ const NavigationBar = () => {
     return (
         <header className="navigation-header">
             <div className="navigation-header-container">
-                <h1 className="stroke" style={{margin: 0}}>Mealtime</h1>
+                <h1 className="stroke" style={{margin: 0}}>Recieppy</h1>
             </div>
         </header>
     );

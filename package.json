@@ -1,12 +1,15 @@
 {
-  "name": "mealtime-web",
+  "name": "recieppy-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "date-fns": "^1.30.1",
+    "express": "^4.17.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.0",
+    "react-transition-group": "^4.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,5 +31,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost"
 }
