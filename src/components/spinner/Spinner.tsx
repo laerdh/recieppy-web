@@ -1,7 +1,11 @@
 import React from 'react';
-import './spinner.css';
+import './Spinner.css';
 
-const Spinner = (props) => {
+interface SpinnerProps {
+    message?: string
+}
+
+const Spinner = (props: SpinnerProps) => {
     return (
         <div className="spinner-container">
             <div className="spinner"></div>

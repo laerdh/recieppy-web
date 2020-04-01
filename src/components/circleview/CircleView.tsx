@@ -1,7 +1,13 @@
 import React from 'react';
-import './circleview.css';
+import './CircleView.css';
 
-const CircleView = (props) => {
+interface CircleViewProps {
+    theme: string
+    title: string
+    isLastElement: boolean
+}
+
+const CircleView = (props: CircleViewProps) => {
     return (
         <div className="circle-container">
             {!props.isLastElement &&
@@ -9,7 +15,7 @@ const CircleView = (props) => {
             }
             <div className="circle" style={{backgroundColor: props.theme}}>{props.title}</div>
         </div>
-    );
+    )
 }
 
-export default CircleView;
+export default CircleView

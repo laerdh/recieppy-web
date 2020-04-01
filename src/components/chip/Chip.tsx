@@ -1,10 +1,14 @@
 import React from 'react';
-import './chip.css';
+import './Chip.css';
 
-const Chip = (props) => {
-    return (
-        <div className="chip">{props.title === undefined ? 'Ukjent' : props.title}</div>
-    );
+interface ChipProps {
+    title?: string
 }
 
-export default Chip;
+const Chip = (props: ChipProps) => {
+    return (
+        <div className="chip">{props.title === undefined ? 'Ukjent' : props.title}</div>
+    )
+}
+
+export default Chip

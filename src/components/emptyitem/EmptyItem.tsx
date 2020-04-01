@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import './emptyitem.css';
-import RoundedButton from '../roundedbutton/roundedbutton';
+import './EmptyItem.css';
+import RoundedButton from '../roundedbutton/RoundedButton';
 
-const EmptyItem = (props) => {
+interface EmptyItemProps {}
+
+const EmptyItem = (props: EmptyItemProps) => {
     const [itemOnTop, setItemOnTop] = useState(false)
 
     function handleItemOnTop() {
@@ -21,7 +23,7 @@ const EmptyItem = (props) => {
                 />
             </div>
         </div>
-    );
+    )
 }
 
-export default EmptyItem;
+export default EmptyItem

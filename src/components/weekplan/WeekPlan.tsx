@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './recipeplan.css';
-import CircleView from '../circleview/circleview';
-import Recipe from '../recipe/recipe';
-import EmptyItem from '../emptyitem/emptyitem';
+import './WeekPlan.css';
+import CircleView from '../circleview/CircleView';
+import Recipe from '../recipe/Recipe';
+import EmptyItem from '../emptyitem/EmptyItem';
 import { format, isSameDay, getISOWeek, addWeeks, subWeeks, getDay, eachDay, startOfWeek, endOfWeek } from 'date-fns';
-import Spinner from '../spinner/spinner';
+import Spinner from '../spinner/Spinner';
+import { RecipePlan } from '../../models/RecipePlan';
+import { RecipePlanItem } from '../../models/RecipePlanItem';
+import { RecipeAction } from '../../providers/RecipeProvider';
 
-const nbLocale = require('date-fns/locale/nb');
+const nbLocale = require('date-fns/locale/nb')
+const KEY_SELECTED_ITEM_ID = 'selectedItemIndex'
 
-const RecipePlan = () => {
+type WeekPlanProps = {
+    recipePlan?: RecipePlan
+    dispatch: React.Dispatch<RecipeAction>
+}
+
+const WeekPlan = (props: WeekPlanProps) => {
     const theme = [
         'rgb(232, 101, 100)',
         'rgb(132, 202, 220)',
@@ -20,8 +29,7 @@ const RecipePlan = () => {
     ]   
 
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const [isLoading, setLoading] = useState(true)
-    const [recipePlan, setRecipePlan] = useState([])
+    const [isLoading, setLoading] = useState(false)
 
     const handleKeyDown = useCallback((event) => {
         switch (event.keyCode) {
@@ -36,9 +44,7 @@ const RecipePlan = () => {
         }
     }, [selectedDate])
 
-    useEffect(() => {
-        const selectedWeek = getISOWeek(selectedDate, { weekStartsOn: 1 })
-
+    useEffect(() => {        
         // TODO: Do GraphQL query
 
         window.addEventListener('keydown', handleKeyDown)
@@ -56,57 +62,45 @@ const RecipePlan = () => {
         setSelectedDate(addWeeks(selectedDate, 1))
     }
 
-    function getLocalizedDayName(date) {
+    function getLocalizedDayName(date: Date) {
         var weekDayName = format(date, 'dddd', { locale: nbLocale })
         weekDayName = weekDayName.charAt(0).toUpperCase() + weekDayName.slice(1, 3)
         return weekDayName
     }
 
-    function getRecipe(item) {
-        if (item === undefined) {
+    function getRecipe(item?: RecipePlanItem) {
+        if (item) {
+            const recipe = item?.recipe
+
             return (
-                <EmptyItem />    
+                <Recipe
+                    onDragStart={(event: React.DragEvent) => onDragStart(event, recipe.id)}
+                    title={recipe.title}
+                    description={recipe.description}
+                    tags={recipe.tags}
+                />
             )
         }
 
-        return (
-            <Recipe
-                onDragStart={(e) => onDragStart(e, recipePlan.indexOf(item))}
-                title={item.recipe.title}
-                description={item.recipe.description}
-            />
-        )
+        return <EmptyItem />
     }
 
-    function onDragStart(event, selectedItemIndex) {
-        event.dataTransfer.setData("selectedItemIndex", selectedItemIndex)
+    function onDragStart(event: React.DragEvent, selectedItemId: number) {
+        event.dataTransfer.setData(KEY_SELECTED_ITEM_ID, selectedItemId.toString())
     }
 
-    function onDragOver(event) {
+    function onDragOver(event: React.DragEvent) {
         event.preventDefault()
     }
 
-    function onDrop(event, date) {
+    function onDrop(event: React.DragEvent, date: Date) {
         let formattedDate = format(date, 'YYYY-MM-DD')
-        let selectedItemIndex = event.dataTransfer.getData("selectedItemIndex")
-        let existingItem = recipePlan.find((item) => {
-            return isSameDay(date, item.date)
-        })
-
-        setRecipePlan((prevState) => {
-            const newState = [...prevState]
-            if (existingItem !== undefined) {
-                const previousDate = prevState[selectedItemIndex].date
-                newState[recipePlan.indexOf(existingItem)].date = previousDate
-            }
-
-            newState[selectedItemIndex].date = formattedDate
-            // TODO: UpdateRecipePlan
-            return newState
-        })
+        let selectedItemId = parseInt(event.dataTransfer.getData(KEY_SELECTED_ITEM_ID))
+ 
+        props.dispatch({ type:'AddRecipeToRecipePlan', recipeId: selectedItemId, date: formattedDate})
     }
 
-    function updateRecipePlan(item) {
+    function updateRecipePlan(item: RecipePlanItem) {
         // TODO: Do GraphQL mutation
     }
 
@@ -122,7 +116,7 @@ const RecipePlan = () => {
                         <path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"/>
                     </svg>
                 </div>
-                <div className="recipeplan-current">Uke {getISOWeek(selectedDate, { weekStartsOn: 1 })}</div>        
+                <div className="recipeplan-current">Uke {getISOWeek(selectedDate)}</div>        
                 <div className="recipeplan-selector" onClick={() => nextWeek()}>
                     <svg fill={theme[1]} width="24" height="24" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/>
@@ -131,7 +125,7 @@ const RecipePlan = () => {
             </div>
             {
                 eachDay(startOfWeek(selectedDate, { weekStartsOn: 1 }), endOfWeek(selectedDate, { weekStartsOn: 1 })).map((date, index) => {
-                    let recipe = recipePlan.find((item) => {
+                    let recipePlanItem = props.recipePlan?.recipes.find((item) => {
                         return isSameDay(date, item.date)
                     })
 
@@ -148,7 +142,7 @@ const RecipePlan = () => {
                             <div className="item-container"
                                 onDragOver={(e) => onDragOver(e)}
                                 onDrop={(e) => onDrop(e, date)}>
-                                {getRecipe(recipe)}
+                                {getRecipe(recipePlanItem)}
                             </div>
                         </div>
                     )
@@ -158,4 +152,4 @@ const RecipePlan = () => {
     )
 }
 
-export default RecipePlan
+export default WeekPlan

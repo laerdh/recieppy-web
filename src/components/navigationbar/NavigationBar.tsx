@@ -1,5 +1,5 @@
 import React from 'react';
-import './navigationbar.css';
+import './NavigationBar.css';
 
 const NavigationBar = () => {
     return (
@@ -8,7 +8,7 @@ const NavigationBar = () => {
                 <h1 className="stroke" style={{margin: 0}}>Recieppy</h1>
             </div>
         </header>
-    );
+    )
 }
 
-export default NavigationBar;
+export default NavigationBar

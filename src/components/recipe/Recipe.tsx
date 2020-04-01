@@ -1,10 +1,19 @@
 import React from 'react';
-import './recipe.css';
-import Chip from '../chip/chip';
+import './Recipe.css';
+import Chip from '../chip/Chip';
 
-const Recipe = (props) => {
+interface RecipeProps {
+    title: string
+    description: string
+    imageUrl?: string
+    tags: string[]
+
+    onDragStart: (event: React.DragEvent) => void 
+}
+
+const Recipe = (props: RecipeProps) => {
     return (
-        <div className="recipe-item" onDragStart={(e) => props.onDragStart(e)} draggable>
+        <div className="recipe-item" onDragStart={(event: React.DragEvent) => props.onDragStart(event)} draggable>
             <div className="recipe-header">
                 <div className="recipe-thumbnail">
                     <img src="https://images.matprat.no/ge4ln2vspg-jumbotron/large" alt="Recipe thumbnail" style={{borderRadius: '32px', width: '100%', height: '100%'}}></img>
@@ -16,11 +25,12 @@ const Recipe = (props) => {
             </div>
             <div className="recipe-description">{props.description}</div>
             <div className="recipe-chip-container">
-                <Chip title={'Kjøtt'} />
-                <Chip title={'Ost'} />
+                { props.tags.map((tag, index) => {
+                    return <Chip key={index} title={tag} />
+                })}
             </div>
         </div>
-    );
+    )
 }
 
-export default Recipe;
+export default Recipe
