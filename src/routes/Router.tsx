@@ -11,9 +11,9 @@ import { Switch, Route } from "react-router-dom";
 export const Routes = (
     <Switch>
         <Route exact={true} path="/auth/callback" component={Callback} />
+        <Route exact={true} path="/auth/renew" component={SilentRenew} />
         <Route exact={true} path="/logout" component={Logout} />
         <Route exact={true} path="/logout/callback" component={LogoutCallback} />
-        <Route exact={true} path="/auth/renew" component={SilentRenew} />
         <AuthenticatedRoute path="/dashboard" component={Dashboard} />
         <Route path="/" component={SignIn} />
     </Switch>

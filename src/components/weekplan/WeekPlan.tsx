@@ -7,13 +7,13 @@ import { format, isSameDay, getISOWeek, addWeeks, subWeeks, getDay, eachDay, sta
 import Spinner from '../spinner/Spinner';
 import { RecipePlan } from '../../models/RecipePlan';
 import { RecipePlanItem } from '../../models/RecipePlanItem';
-import { RecipeAction } from '../../providers/RecipeProvider';
+import { RecipeAction } from '../../context/RecipeContext';
 
 const nbLocale = require('date-fns/locale/nb')
 const KEY_SELECTED_ITEM_ID = 'selectedItemIndex'
 
 type WeekPlanProps = {
-    recipePlan?: RecipePlan
+    recipePlan: RecipePlan
     dispatch: React.Dispatch<RecipeAction>
 }
 
@@ -97,7 +97,7 @@ const WeekPlan = (props: WeekPlanProps) => {
         let formattedDate = format(date, 'YYYY-MM-DD')
         let selectedItemId = parseInt(event.dataTransfer.getData(KEY_SELECTED_ITEM_ID))
  
-        props.dispatch({ type:'AddRecipeToRecipePlan', recipeId: selectedItemId, date: formattedDate})
+        props.dispatch({ type: 'UpdateRecipePlan', week: getISOWeek(selectedDate), recipeId: selectedItemId, date: formattedDate})
     }
 
     function updateRecipePlan(item: RecipePlanItem) {
@@ -125,7 +125,7 @@ const WeekPlan = (props: WeekPlanProps) => {
             </div>
             {
                 eachDay(startOfWeek(selectedDate, { weekStartsOn: 1 }), endOfWeek(selectedDate, { weekStartsOn: 1 })).map((date, index) => {
-                    let recipePlanItem = props.recipePlan?.recipes.find((item) => {
+                    let recipePlanItem = props.recipePlan.recipes.find((item) => {
                         return isSameDay(date, item.date)
                     })
 

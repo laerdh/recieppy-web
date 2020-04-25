@@ -1,6 +1,6 @@
 import React from 'react';
 import WeekPlan from '../weekplan/WeekPlan';
-import { RecipeProvider, RecipeConsumer } from '../../providers/RecipeProvider';
+import { RecipeProvider, RecipeConsumer } from '../../context/RecipeContext';
 
 export const Dashboard = (props: any) => {
     return (

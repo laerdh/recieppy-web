@@ -1,13 +1,13 @@
 import React from "react";
-import { AuthConsumer } from "../../providers/AuthProvider"
+import { AuthConsumer } from "../../context/AuthContext"
+import Spinner from "../../components/spinner/Spinner";
 
 export const Callback = () => {
     return (
         <AuthConsumer>
-            {({ signInRedirectCallback }) => {
-                console.log("CALLBACK")
-                signInRedirectCallback()
-                return <span>loading</span>
+            {({ completeAuthentication }) => {
+                completeAuthentication()
+                return <Spinner message="Signing in..." />
             }}
         </AuthConsumer>
     )

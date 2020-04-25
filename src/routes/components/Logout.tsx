@@ -1,12 +1,13 @@
 import React from "react";
-import { AuthConsumer } from "../../providers/AuthProvider"
+import { AuthConsumer } from "../../context/AuthContext"
+import Spinner from "../../components/spinner/Spinner";
 
 export const Logout = () => {
     return (
         <AuthConsumer>
-            {({ logout }) => {
-                logout()
-                return <span>loading</span>
+            {({ beginLogout }) => {
+                beginLogout()
+                return <Spinner message="Signing out..." />
             }}
         </AuthConsumer>
     )

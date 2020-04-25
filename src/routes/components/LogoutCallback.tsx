@@ -1,12 +1,13 @@
 import React from "react";
-import { AuthConsumer } from "../../providers/AuthProvider"
+import { AuthConsumer } from "../../context/AuthContext"
+import Spinner from "../../components/spinner/Spinner";
 
 export const LogoutCallback = () => {
     return (
         <AuthConsumer>
-            {({ signOutRedirectCallback }) => {
-                signOutRedirectCallback()
-                return <span>loading</span>
+            {({ completeLogout }) => {
+                completeLogout()
+                return <Spinner />
             }}
         </AuthConsumer>
     )

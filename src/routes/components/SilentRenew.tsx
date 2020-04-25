@@ -1,12 +1,13 @@
 import React from "react";
-import { AuthConsumer } from "../../providers/AuthProvider"
+import { AuthConsumer } from "../../context/AuthContext";
+import Spinner from "../../components/spinner/Spinner";
 
 export const SilentRenew = () => {
     return (
         <AuthConsumer>
-            {({ signInSilentCallback }) => {
-                signInSilentCallback()
-                return <span>loading</span>
+            {({ completeSilentAuthentication }) => {
+                completeSilentAuthentication()
+                return <Spinner />
             }}
         </AuthConsumer>
     )
