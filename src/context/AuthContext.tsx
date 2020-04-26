@@ -60,7 +60,7 @@ function reducer(state: AuthenticationState, action: AuthenticationAction): Auth
     }
 }
 
-const AuthContext = React.createContext<AuthenticationState>(initialState);
+export const AuthContext = React.createContext<AuthenticationState>(initialState);
 
 export const AuthConsumer = AuthContext.Consumer;
 
@@ -91,6 +91,8 @@ export const AuthProvider = (props: any) => {
         }
     
         const tokenExpired = (...ev: any[]): void => {
+            if (!state.user) { return }
+
             userManager.signinSilent().then(user => {
                 if (user && !user.expired) {
                     dispatch({ type: 'SetUserSignedIn', user: user })

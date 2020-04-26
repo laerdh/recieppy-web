@@ -2,6 +2,8 @@ import React from "react";
 import { AuthConsumer } from "../context/AuthContext"
 import { Route, RouteProps } from "react-router-dom";
 import Spinner from "../components/spinner/Spinner";
+import ErrorView from "../components/errorview/ErrorView";
+import { Button } from "@material-ui/core";
 
 
 export const AuthenticatedRoute = ({ component, ...rest }: RouteProps) => {
@@ -16,10 +18,13 @@ export const AuthenticatedRoute = ({ component, ...rest }: RouteProps) => {
 
                     if (!!Component && isAuthenticated()) {
                         return <Component {...props} />;
-                    } else {
-                        beginAuthentication()
-                        return <Spinner />
                     }
+                    
+                    return (
+                        <ErrorView message='You have been logged out.'>
+                            <Button onClick={beginAuthentication}>Sign in</Button>
+                        </ErrorView>
+                    )
 
                 }}
             </AuthConsumer>
