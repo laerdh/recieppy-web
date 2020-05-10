@@ -24,7 +24,7 @@ export const SignIn = (props: SignInProps) => {
                 { authContext.isAuthenticated()
                     ? <div className="buttongroup">
                         <Link to="/dashboard">
-                            <Button text="Gå til planleggeren" type={ButtonType.Primary} onClick={() => { console.log('Go to dashboard')}} />
+                            <Button text="Gå til planleggeren" type={ButtonType.Primary} />
                         </Link>
                      </div>
                     : <div className="buttongroup">

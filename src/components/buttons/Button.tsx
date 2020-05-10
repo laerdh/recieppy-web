@@ -9,7 +9,7 @@ export enum ButtonType {
 export interface PrimaryButtonProps {
     text: string
     type: ButtonType
-    onClick: () => void
+    onClick?: () => void
 }
 
 const Button = (props: PrimaryButtonProps) => {

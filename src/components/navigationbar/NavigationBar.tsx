@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './NavigationBar.css';
 import MenuIcon from '@material-ui/icons/Menu';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 const NavigationBar = () => {
-    const [toggle, setToggle] = useState(false);
+    const authContext = useContext(AuthContext)
+    const [toggle, setToggle] = useState(false)
     const getClass = (): string => {
         const itemClass = ['item']
 
@@ -35,6 +37,9 @@ const NavigationBar = () => {
                 <li className={getClass()}><NavLink to="/customers" activeClassName="active"><b>Kunder</b></NavLink></li>
                 <li className={getClass()}><NavLink to="/about" activeClassName="active"><b>Om oss</b></NavLink></li>
                 <li className={getClass()}><NavLink to="/contact" activeClassName="active"><b>Kontakt</b></NavLink></li>
+                { authContext.isAuthenticated() &&
+                    <li className={getClass()}><a href="#" onClick={authContext.beginLogout}><b>Logg ut</b></a></li>
+                }
                 <li onClick={handleToggleButtonClicked} className="toggle"><MenuIcon /></li>
             </ul>
         </nav>
