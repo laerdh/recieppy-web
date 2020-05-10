@@ -21,8 +21,8 @@ export const AuthenticatedRoute = ({ component, ...rest }: RouteProps) => {
                     }
                     
                     return (
-                        <ErrorView message='You have been logged out.'>
-                            <Button onClick={beginAuthentication}>Sign in</Button>
+                        <ErrorView message='Oisann! Du har blitt logget ut.'>
+                            <Button onClick={beginAuthentication}>Logg inn</Button>
                         </ErrorView>
                     )
 

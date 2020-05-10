@@ -1,11 +1,29 @@
+@font-face {
+  font-family: 'Avenir';
+  src: url(./assets/fonts/Avenir.ttc)
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: normal;
+  src: url(./assets/fonts/Lato-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: bold;
+  src: url(./assets/fonts/Lato-Bold.ttf)
+}
+
 html, body, #root {
   min-height: 100vh;
 }
 
 .App {
-  background-color: rgb(247, 247, 247);
-  font-family: 'Fredoka One', cursive;
+  background-color: #FFFFFF;
+  font-family: 'Lato';
   min-height: 100vh;
+  color: #3D3D3D;
 }
 
 .App-link {
@@ -22,7 +40,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   align-self: center;
-  padding: 32px 0 32px 0;
+  padding: 24px;
 }
 
 .item-container {

@@ -7,14 +7,16 @@ import NavigationBar from './components/navigationbar/NavigationBar';
 
 function App() {
   return (
-    <AuthProvider>
-      <div className="App">
-        <NavigationBar />
-        <div className="content-container">
-          <BrowserRouter children={Routes} basename={"/"} />
-        </div>
-      </div>
-    </AuthProvider>
+    <div className="App">
+      <BrowserRouter basename="/">
+        <AuthProvider>
+          <NavigationBar />
+          <div className="content-container">
+            { Routes }
+          </div>
+        </AuthProvider>
+      </BrowserRouter>
+    </div>
   );
 }
 

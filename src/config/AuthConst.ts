@@ -4,6 +4,7 @@ export const IDENTITY_CONFIG = {
     redirect_uri: 'http://localhost:3000/auth/callback',
     loadUserInfo: false,
     silent_redirect_uri: 'http://localhost:3000/auth/renew',
+    post_logout_redirect_uri: 'http://localhost:3000/',
     response_type: 'code',
     scope: 'openid',
     webAuthResponseType: 'id_token token'
