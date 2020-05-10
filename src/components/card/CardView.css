@@ -1,0 +1,32 @@
+.card-container {
+    display: flex;
+    align-items: flex-end;
+    width: 375px;
+    height: 554px;
+    border-radius: 8px;
+    margin: 8px;
+    overflow-y: hidden;
+}
+
+.card-overlay {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.56) 100%);
+    color: white;
+    padding: 16px;
+}
+
+.content {
+    margin: 0;
+    max-lines: 1;
+}
+
+.content.title {
+    margin: 0;
+    font-size: 20px;
+}
+
+.content.description {
+    margin: 4px 0 0 0;
+    font-size: 12px;
+}

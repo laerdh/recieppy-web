@@ -1,0 +1,65 @@
+.signin-container {
+    font-family: 'Avenir';
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.promotional {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    order: 1;
+}
+
+.signin {
+    display: flex;
+    flex-direction: column;
+    order: 0;
+    padding: 40px;
+}
+
+.signin-title {
+    font-size: 80px;
+    margin: 0;
+    padding: 16px 0;
+}
+
+.signin-description {
+    margin: 0;
+    padding: 16px 0;
+    font-size: 26px;
+    line-height: 36px;
+    font-weight: 800;
+}
+
+.divider {
+    width: 45px;
+    height: 4px;
+    background: #D9B0A7;
+    border-radius: 2px;
+}
+
+.buttongroup {
+    display: flex;
+    flex-direction: row;
+    margin: -16px;
+    padding: 48px 0;
+}
+
+.buttongroup.signedin {
+    flex-direction: column;
+}
+
+@media screen and (min-width: 600px) {
+    .signin {
+        order: 1;
+    }
+
+    .preview {
+        order: 0;
+    }
+}

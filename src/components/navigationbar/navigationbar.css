@@ -1,16 +1,92 @@
-.navigation-header {
-    display: flex;
-    background-color: rgb(231, 231, 231);
-    font-size: calc(10px + 2vmin);
-    color: white;
-    padding: 16px;
-    justify-content: center;
+ul {
+    list-style-type: none;
+    margin: 0 8% 0 8%;
+    padding: 0 16px 0 16px;
 }
 
-.navigation-header-container {
-    align-self: center;
-    background-color: rgb(231, 231, 231);
-    font-size: calc(10px + 2vmin);
-    color: gray;
-    padding: 16px;
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 8px;
+}
+
+.menu li {
+    font-family: 'Avenir';
+    font-size: 16px;
+    padding: 8px 16px;
+    white-space: nowrap;
+    color: #3D3D3D;
+}
+
+.item {
+    width: 100%;
+    text-align: center;
+    order: 2;
+    display: none;
+}
+
+.item a  {
+    color: #3D3D3D;
+    text-decoration: none;
+}
+
+.item a:visited {
+    color: #3D3D3D;
+}
+
+.item.expanded {
+    display: block;
+}
+
+.active {
+    color: red;
+}
+
+.toggle {
+    order: 1;
+}
+
+.logo {
+    padding: 0;
+}
+
+.brand-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+#brandname {
+    font-family: 'Avenir';
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -1.78px;
+    color: #3D3D3D;
+}
+
+@media all and (min-width: 600px) {
+    .menu {
+        margin: 0 8% 0 8%;
+    }
+    .item {
+        display: block;
+        width: auto;
+    }
+    
+    .toggle {
+        display: none;
+    }
+
+    .logo {
+        flex: 1;
+        order: 0;
+    }
+
+    .item {
+        order: 1;
+    }
 }
