@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { RecipePlan } from '../models/RecipePlan'
-import { RecipePlanItem } from '../models/RecipePlanItem'
+import { RecipePlanEvent } from '../models/RecipePlanEvent'
 
 export interface TokenData {
     access_token: string
@@ -59,7 +59,7 @@ class ApiService {
         })
     }
 
-    updateRecipePlan = async (recipePlanEvent: RecipePlanItem, newDate: string): Promise<RecipePlan> => {
+    updateRecipePlan = async (recipePlanEvent: RecipePlanEvent, newDate: string): Promise<RecipePlan> => {
         return new Promise(async (resolve, reject) => {
             const locationId = 1
     

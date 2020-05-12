@@ -6,8 +6,6 @@ import { getISOWeek } from "date-fns";
 export type RecipeAction =
     | { type: 'SetLoading', isLoading: boolean }
     | { type: 'SetRecipePlan', recipePlan: RecipePlan }
-    | { type: 'UpdateRecipePlan', recipeId: string, date: string }
-    | { type: 'RemoveRecipeFromRecipePlan', recipeId: string }
 
 export interface RecipeState {
     isLoading: boolean
@@ -39,9 +37,6 @@ function reducer(state: RecipeState, action: RecipeAction): RecipeState {
                 isLoading: false,
                 recipePlan: action.recipePlan
             }
-        case 'RemoveRecipeFromRecipePlan':
-            console.log('Remove recipe from recipe plan action')
-            return state
         default:
             throw Error("Action not defined")
     }

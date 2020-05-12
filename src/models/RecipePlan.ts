@@ -1,6 +1,6 @@
-import { RecipePlanItem } from "./RecipePlanItem";
+import { RecipePlanEvent } from "./RecipePlanEvent";
 
 export interface RecipePlan {
     weekNumber: number,
-    events: RecipePlanItem[]
+    events: RecipePlanEvent[]
 }

@@ -5,7 +5,7 @@ import Recipe from '../recipe/Recipe';
 import EmptyItem from '../emptyitem/EmptyItem';
 import { format, isSameDay, getISOWeek, addWeeks, subWeeks, getDay, eachDay, startOfWeek, endOfWeek } from 'date-fns';
 import { RecipePlan } from '../../models/RecipePlan';
-import { RecipePlanItem } from '../../models/RecipePlanItem';
+import { RecipePlanEvent } from '../../models/RecipePlanEvent';
 
 const nbLocale = require('date-fns/locale/nb')
 const KEY_SELECTED_ITEM_INDEX = 'selectedItemIndex'
@@ -51,7 +51,7 @@ const WeekPlan = (props: WeekPlanProps) => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
         }
-    }, [selectedDate, handleKeyDown, props])
+    }, [selectedDate, handleKeyDown])
 
     function previousWeek() {
         setSelectedDate(subWeeks(selectedDate, 1))
@@ -67,7 +67,7 @@ const WeekPlan = (props: WeekPlanProps) => {
         return weekDayName
     }
 
-    function getRecipe(item?: RecipePlanItem) {
+    function getRecipePlanEvent(item?: RecipePlanEvent) {
         if (item) {
             const recipe = item.recipe
 
@@ -115,7 +115,7 @@ const WeekPlan = (props: WeekPlanProps) => {
             </div>
             {
                 eachDay(startOfWeek(selectedDate, { weekStartsOn: 1 }), endOfWeek(selectedDate, { weekStartsOn: 1 })).map((date, index) => {
-                    let recipePlanItem = props.recipePlan.events.find((item) => {
+                    let recipePlanEvent = props.recipePlan.events.find((item) => {
                         return isSameDay(date, item.date)
                     })
 
@@ -132,7 +132,7 @@ const WeekPlan = (props: WeekPlanProps) => {
                             <div className="item-container"
                                 onDragOver={(e) => onDragOver(e)}
                                 onDrop={(e) => onDrop(e, date)}>
-                                {getRecipe(recipePlanItem)}
+                                {getRecipePlanEvent(recipePlanEvent)}
                             </div>
                         </div>
                     )
