@@ -6,8 +6,8 @@ export const Dashboard = (props: any) => {
     return (
       <RecipeProvider>
         <RecipeConsumer>
-          { recipeState => (
-              <WeekPlan recipePlan={recipeState.recipePlan} dispatch={recipeState.dispatch} />
+          { state => (
+              <WeekPlan isLoading={state.isLoading} recipePlan={state.recipePlan} fetchRecipePlan={state.fetchRecipePlan} updateRecipePlan={state.updateRecipePlan} />
           )}
         </RecipeConsumer>
       </RecipeProvider>

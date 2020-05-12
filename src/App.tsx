@@ -8,7 +8,7 @@ import NavigationBar from './components/navigationbar/NavigationBar';
 function App() {
   return (
     <div className="App">
-      <BrowserRouter basename="/">
+      <BrowserRouter basename={"/"}>
         <AuthProvider>
           <NavigationBar />
           <div className="content-container">

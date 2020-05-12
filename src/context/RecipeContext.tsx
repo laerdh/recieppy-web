@@ -1,77 +1,43 @@
 import React from "react";
-import { RecipeItem } from "../models/RecipeItem";
 import { RecipePlan } from "../models/RecipePlan";
+import apiService from "../services/ApiService";
+import { getISOWeek } from "date-fns";
 
 export type RecipeAction =
-    | { type: 'AddRecipe', recipe: RecipeItem }
-    | { type: 'RemoveRecipe', recipeId: number }
-    | { type: 'UpdateRecipePlan', week: number, recipeId: number, date: string }
-    | { type: 'RemoveRecipeFromRecipePlan', recipeId: number }
+    | { type: 'SetLoading', isLoading: boolean }
+    | { type: 'SetRecipePlan', recipePlan: RecipePlan }
+    | { type: 'UpdateRecipePlan', recipeId: string, date: string }
+    | { type: 'RemoveRecipeFromRecipePlan', recipeId: string }
 
 export interface RecipeState {
-    recipes: RecipeItem[]
+    isLoading: boolean
     recipePlan: RecipePlan
-    dispatch: React.Dispatch<RecipeAction>
+    fetchRecipePlan: (weekNumber: number) => void
+    updateRecipePlan: (itemIndex: number, date: string) => void
 }
 
 const initialState: RecipeState = {
-    recipes: [],
+    isLoading: true,
     recipePlan: {
-        weekNumber: 1,
-        recipes: [
-            {
-                date: '2020-03-11',
-                recipe: {
-                    id: 1,
-                    title: 'Kjøttkaker',
-                    description: 'Heihei',
-                    tags: ['Kjøtt']
-                }
-            },
-            {
-                date: '2020-03-12',
-                recipe: {
-                    id: 2,
-                    title: 'Fiskeboller',
-                    description: 'Mhmm',
-                    tags: ['Fisk']
-                }
-            }
-        ]
-        },
-    dispatch: () => {}
-}
+        weekNumber: getISOWeek(new Date()),
+        events: []
+    },
+    fetchRecipePlan: () => {},
+    updateRecipePlan: () => {}
+};
 
 function reducer(state: RecipeState, action: RecipeAction): RecipeState {
     switch (action.type) {
-        case 'AddRecipe':
+        case 'SetLoading':
             return {
                 ...state,
-                recipes: [...state.recipes, action.recipe]
+                isLoading: action.isLoading
             }
-        case 'RemoveRecipe':
+        case 'SetRecipePlan':
             return {
                 ...state,
-                recipes: [...state.recipes.filter((item) => item.id !== action.recipeId)]
-            }
-        case 'UpdateRecipePlan':
-            const itemToUpdateIndex = state.recipePlan.recipes.findIndex(item => item.recipe.id === action.recipeId)
-            const existingItemIndex = state.recipePlan.recipes.findIndex(item => item.date === action.date)
-
-            const newState = [...state.recipePlan.recipes]
-
-            if (existingItemIndex != -1) {
-                newState[existingItemIndex].date = newState[itemToUpdateIndex].date
-            }
-
-            newState[itemToUpdateIndex].date = action.date
-
-            return {
-                ...state,
-                recipePlan: {
-                    weekNumber: state.recipePlan.weekNumber,
-                    recipes: newState
-                }
+                isLoading: false,
+                recipePlan: action.recipePlan
             }
         case 'RemoveRecipeFromRecipePlan':
             console.log('Remove recipe from recipe plan action')
@@ -88,11 +54,35 @@ export const RecipeConsumer = RecipeContext.Consumer;
 export const RecipeProvider = (props: any) => {
     const [state, dispatch] = React.useReducer(reducer, initialState)
 
+    const fetchRecipePlan = (weekNumber: number) => {
+        dispatch({ type: 'SetLoading', isLoading: true })
+        
+        apiService.fetchRecipePlan(weekNumber).then(recipePlan => {
+            dispatch({ type: 'SetRecipePlan', recipePlan: recipePlan})
+        })
+        .catch(error => {
+            console.log('Failed to load recipe plan', error)
+            dispatch({ type: 'SetLoading', isLoading: false })
+        })
+    }
+
+    const updateRecipePlan = (itemIndex: number, newDate: string) => {
+        const recipePlanEvent = state.recipePlan.events[itemIndex]
+
+        apiService.updateRecipePlan(recipePlanEvent, newDate).then(recipePlan => {
+            dispatch({ type: 'SetRecipePlan', recipePlan })
+        })
+        .catch(error => {
+            console.log('Failed to update recipe plan', error)
+        })
+    }
+
     return (
         <RecipeContext.Provider
             value={{
                 ...state,
-                dispatch
+                fetchRecipePlan,
+                updateRecipePlan
             }}>
             {props.children}
         </RecipeContext.Provider>

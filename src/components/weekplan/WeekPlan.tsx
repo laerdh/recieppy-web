@@ -4,17 +4,17 @@ import CircleView from '../circleview/CircleView';
 import Recipe from '../recipe/Recipe';
 import EmptyItem from '../emptyitem/EmptyItem';
 import { format, isSameDay, getISOWeek, addWeeks, subWeeks, getDay, eachDay, startOfWeek, endOfWeek } from 'date-fns';
-import Spinner from '../spinner/Spinner';
 import { RecipePlan } from '../../models/RecipePlan';
 import { RecipePlanItem } from '../../models/RecipePlanItem';
-import { RecipeAction } from '../../context/RecipeContext';
 
 const nbLocale = require('date-fns/locale/nb')
-const KEY_SELECTED_ITEM_ID = 'selectedItemIndex'
+const KEY_SELECTED_ITEM_INDEX = 'selectedItemIndex'
 
 type WeekPlanProps = {
-    recipePlan: RecipePlan
-    dispatch: React.Dispatch<RecipeAction>
+    isLoading: boolean,
+    recipePlan: RecipePlan,
+    fetchRecipePlan: (weekNumber: number) => void,
+    updateRecipePlan: (itemIndex: number, date: string) => void
 }
 
 const WeekPlan = (props: WeekPlanProps) => {
@@ -29,7 +29,6 @@ const WeekPlan = (props: WeekPlanProps) => {
     ]   
 
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const [isLoading, setLoading] = useState(false)
 
     const handleKeyDown = useCallback((event) => {
         switch (event.keyCode) {
@@ -44,15 +43,15 @@ const WeekPlan = (props: WeekPlanProps) => {
         }
     }, [selectedDate])
 
-    useEffect(() => {        
-        // TODO: Do GraphQL query
+    useEffect(() => {
+        props.fetchRecipePlan(getISOWeek(selectedDate))
 
         window.addEventListener('keydown', handleKeyDown)
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
         }
-    }, [selectedDate, handleKeyDown])
+    }, [selectedDate, handleKeyDown, props])
 
     function previousWeek() {
         setSelectedDate(subWeeks(selectedDate, 1))
@@ -70,13 +69,13 @@ const WeekPlan = (props: WeekPlanProps) => {
 
     function getRecipe(item?: RecipePlanItem) {
         if (item) {
-            const recipe = item?.recipe
+            const recipe = item.recipe
 
             return (
                 <Recipe
-                    onDragStart={(event: React.DragEvent) => onDragStart(event, recipe.id)}
+                    onDragStart={(event: React.DragEvent) => onDragStart(event, props.recipePlan.events.indexOf(item))}
                     title={recipe.title}
-                    description={recipe.description}
+                    comment={recipe.comment}
                     tags={recipe.tags}
                 />
             )
@@ -85,8 +84,8 @@ const WeekPlan = (props: WeekPlanProps) => {
         return <EmptyItem />
     }
 
-    function onDragStart(event: React.DragEvent, selectedItemId: number) {
-        event.dataTransfer.setData(KEY_SELECTED_ITEM_ID, selectedItemId.toString())
+    function onDragStart(event: React.DragEvent, selectedItemIndex: number) {
+        event.dataTransfer.setData(KEY_SELECTED_ITEM_INDEX, selectedItemIndex.toString())
     }
 
     function onDragOver(event: React.DragEvent) {
@@ -95,17 +94,8 @@ const WeekPlan = (props: WeekPlanProps) => {
 
     function onDrop(event: React.DragEvent, date: Date) {
         let formattedDate = format(date, 'YYYY-MM-DD')
-        let selectedItemId = parseInt(event.dataTransfer.getData(KEY_SELECTED_ITEM_ID))
- 
-        props.dispatch({ type: 'UpdateRecipePlan', week: getISOWeek(selectedDate), recipeId: selectedItemId, date: formattedDate})
-    }
-
-    function updateRecipePlan(item: RecipePlanItem) {
-        // TODO: Do GraphQL mutation
-    }
-
-    if (isLoading) {
-        return <Spinner />
+        let selectedItemIndex = parseInt(event.dataTransfer.getData(KEY_SELECTED_ITEM_INDEX))
+        props.updateRecipePlan(selectedItemIndex, formattedDate)
     }
 
     return (
@@ -125,7 +115,7 @@ const WeekPlan = (props: WeekPlanProps) => {
             </div>
             {
                 eachDay(startOfWeek(selectedDate, { weekStartsOn: 1 }), endOfWeek(selectedDate, { weekStartsOn: 1 })).map((date, index) => {
-                    let recipePlanItem = props.recipePlan.recipes.find((item) => {
+                    let recipePlanItem = props.recipePlan.events.find((item) => {
                         return isSameDay(date, item.date)
                     })
 
