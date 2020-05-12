@@ -1,6 +1,14 @@
+import { Tag } from "./Tag";
+
 export interface RecipeItem {
-    id: number
+    id: string
     title: string
-    description: string
-    tags: string[]
+    imageUrl?: string
+    site?: string
+    url: string
+    comment?: string
+    shared: boolean
+    created: string
+    createdBy: string
+    tags: Tag[]
 }

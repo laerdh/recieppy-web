@@ -1,12 +1,13 @@
 import React from 'react';
 import './Recipe.css';
 import Chip from '../chip/Chip';
+import { Tag } from '../../models/Tag';
 
 interface RecipeProps {
     title: string
-    description: string
+    comment?: string
     imageUrl?: string
-    tags: string[]
+    tags: Tag[]
 
     onDragStart: (event: React.DragEvent) => void 
 }
@@ -23,10 +24,10 @@ const Recipe = (props: RecipeProps) => {
                     {/* Insert date created + other */ }
                 </div>
             </div>
-            <div className="recipe-description">{props.description}</div>
+            <div className="recipe-description">{props.comment}</div>
             <div className="recipe-chip-container">
-                { props.tags.map((tag, index) => {
-                    return <Chip key={index} title={tag} />
+                { props.tags.map(tag => {
+                    return <Chip key={tag.id} title={tag.text} />
                 })}
             </div>
         </div>
