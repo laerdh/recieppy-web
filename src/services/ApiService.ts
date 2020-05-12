@@ -7,6 +7,31 @@ export interface TokenData {
     refresh_token: string
 }
 
+const RecipeFragment = `
+    recipe {
+        id
+        title
+        imageUrl
+        site
+        url
+        comment
+        shared
+        created
+        createdBy
+        tags {
+            id
+            text
+        }
+    }
+`
+
+const RecipePlanEventFragment = `
+    events {
+        date
+        ${RecipeFragment}
+    }
+`
+
 const instance = axios.create()
 class ApiService {
     BASE_URL: string = "http://localhost:8000/graphql"
@@ -28,23 +53,7 @@ class ApiService {
                 query FetchRecipePlan {
                     recipePlan(locationId: ${locationId}, weekNumber: ${weekNumber}) {
                         weekNumber
-                        events {
-                            date
-                            recipe {
-                                id
-                                title
-                                imageUrl
-                                site
-                                url
-                                comment
-                                shared
-                                createdBy
-                                tags {
-                                    id
-                                    text
-                                }
-                            }
-                        }
+                        ${RecipePlanEventFragment}
                     }
                 }
             `.replace('\n', '').trim()
@@ -67,24 +76,7 @@ class ApiService {
                 mutation updateRecipePlanEvent {
                     updateRecipePlanEvent(locationId: ${locationId}, recipePlanEvent: {recipeId: ${recipePlanEvent.recipe.id}, currentDate: "${recipePlanEvent.date}", newDate: "${newDate}"}) {
                         weekNumber
-                        events {
-                            date
-                            recipe {
-                                id
-                                title
-                                imageUrl
-                                site
-                                url
-                                comment
-                                shared
-                                created
-                                createdBy
-                                tags {
-                                    id
-                                    text
-                                }
-                            }
-                        }
+                        ${RecipePlanEventFragment}
                     }
                 }
             `.replace('\n', '').trim()
