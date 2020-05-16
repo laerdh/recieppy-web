@@ -68,7 +68,7 @@ ul {
     color: #3D3D3D;
 }
 
-@media all and (min-width: 600px) {
+@media screen and (min-width: 700px) {
     .menu {
         margin: 0 8% 0 8%;
     }

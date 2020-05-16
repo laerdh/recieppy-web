@@ -1,32 +1,52 @@
 .card-container {
     display: flex;
-    align-items: flex-end;
+    justify-content: flex-end;
+    flex-direction: column;
+    min-height: 120px;
+    margin: 8px;
+    border-radius: 12px;
+    overflow-y: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.promo-card {
+    align-items: stretch;
+    flex-direction: column;
     width: 375px;
     height: 554px;
-    border-radius: 8px;
-    margin: 8px;
-    overflow-y: hidden;
 }
 
-.card-overlay {
-    display: flex;
+.default-card {
+    position: relative;
+    align-items: stretch;
     flex-direction: column;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.56) 100%);
-    color: white;
-    padding: 16px;
-}
-
-.content {
+    width: 100%;
+    height: 24vh;
+    box-shadow: 0px 1.5px 4px 1px #c4c4c4;
     margin: 0;
-    max-lines: 1;
+    cursor: pointer;
 }
 
-.content.title {
-    margin: 0;
-    font-size: 20px;
+.open-external {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    align-self: flex-end;
+    flex: 2 0 auto;
 }
 
-.content.description {
-    margin: 4px 0 0 0;
-    font-size: 12px;
+@media screen and (min-width: 700px) and (max-width: 1200px) {
+    .default-card {
+        width: 80%;
+        height: 32vh;
+    }
+}
+
+@media screen and (min-width: 1201px) {
+    .default-card {
+        width: 50%;
+    }
 }

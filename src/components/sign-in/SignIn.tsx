@@ -1,20 +1,29 @@
-import React from "react";
-import './SignIn.css';
-import CardView from "../card/CardView";
-import Button, { ButtonType } from "../buttons/Button";
-import { AuthContext } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+import React from "react"
+import './SignIn.css'
+import CardView from "../card/CardView"
+import Button, { ButtonType } from "../buttons/Button"
+import { AuthContext } from "../../context/AuthContext"
+import { Link } from "react-router-dom"
+import { CardViewType } from "../card/CardView"
 
-interface SignInProps {}
-
-export const SignIn = (props: SignInProps) => {
+export const SignIn = () => {
     const authContext = React.useContext(AuthContext)
 
     return (
         <div className="signin-container">
             <div className="promotional">
-                <CardView title="Sandans favoritter" description="12 oppskrifter" imageUrl="https://images.matprat.no/gkvvb8uj4j-jumbotron/large" />
-                <CardView title="Aslaksens topp 10" description="10 oppskrifter" imageUrl="https://images.matprat.no/bznby7vyka-jumbotron/large" />
+                <CardView 
+                    type={CardViewType.Promo}
+                    title="Sandans favoritter"
+                    description="12 oppskrifter"
+                    imageUrl="https://images.matprat.no/gkvvb8uj4j-jumbotron/large"
+                    />
+                <CardView
+                    type={CardViewType.Promo}
+                    title="Aslaksens topp 10"
+                    description="10 oppskrifter"
+                    imageUrl="https://images.matprat.no/bznby7vyka-jumbotron/large"
+                    />
             </div>
             <div className="signin">
                 <h1 className="signin-title">Reciappy</h1>

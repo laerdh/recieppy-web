@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './WeekPlan.css';
-import CircleView from '../circleview/CircleView';
-import Recipe from '../recipe/Recipe';
+import ArrowLeft from '../../assets/images/arrow_left.svg'
+import ArrowRight from '../../assets/images/arrow_right.svg'
 import EmptyItem from '../emptyitem/EmptyItem';
-import { format, isSameDay, getISOWeek, addWeeks, subWeeks, getDay, eachDay, startOfWeek, endOfWeek } from 'date-fns';
+import { isSameDay, getISOWeek, addWeeks, subWeeks, eachDay, startOfWeek, endOfWeek } from 'date-fns';
 import { RecipePlan } from '../../models/RecipePlan';
 import { RecipePlanEvent } from '../../models/RecipePlanEvent';
+import DraggableCardView from '../card/DraggableCardView';
+import { CardViewType } from '../card/CardView';
+import { DateUtil } from './DateUtil';
 
-const nbLocale = require('date-fns/locale/nb')
 const KEY_SELECTED_ITEM_INDEX = 'selectedItemIndex'
 
 type WeekPlanProps = {
@@ -18,16 +20,6 @@ type WeekPlanProps = {
 }
 
 const WeekPlan = (props: WeekPlanProps) => {
-    const theme = [
-        'rgb(232, 101, 100)',
-        'rgb(132, 202, 220)',
-        'rgb(237, 209, 39',
-        'rgb(232, 101, 100',
-        'rgb(132, 202, 220)',
-        'rgb(232, 101, 100)',
-        'rgb(132, 202, 220)',
-    ]   
-
     const [selectedDate, setSelectedDate] = useState(new Date())
 
     const handleKeyDown = useCallback((event) => {
@@ -61,27 +53,22 @@ const WeekPlan = (props: WeekPlanProps) => {
         setSelectedDate(addWeeks(selectedDate, 1))
     }
 
-    function getLocalizedDayName(date: Date) {
-        var weekDayName = format(date, 'dddd', { locale: nbLocale })
-        weekDayName = weekDayName.charAt(0).toUpperCase() + weekDayName.slice(1, 3)
-        return weekDayName
-    }
-
-    function getRecipePlanEvent(item?: RecipePlanEvent) {
+    function getRecipePlanEvent(weekDayName: string, item?: RecipePlanEvent) {
         if (item) {
             const recipe = item.recipe
 
             return (
-                <Recipe
-                    onDragStart={(event: React.DragEvent) => onDragStart(event, props.recipePlan.events.indexOf(item))}
+                <DraggableCardView
+                    type={CardViewType.Default}
                     title={recipe.title}
-                    comment={recipe.comment}
-                    tags={recipe.tags}
-                />
+                    description={weekDayName}
+                    url={recipe.url}
+                    imageUrl={recipe.imageUrl}
+                    onDragStart={ (event: React.DragEvent) => onDragStart(event, props.recipePlan.events.indexOf(item))} />
             )
         }
 
-        return <EmptyItem />
+        return <EmptyItem dayOfWeek={weekDayName} />
     }
 
     function onDragStart(event: React.DragEvent, selectedItemIndex: number) {
@@ -93,25 +80,23 @@ const WeekPlan = (props: WeekPlanProps) => {
     }
 
     function onDrop(event: React.DragEvent, date: Date) {
-        let formattedDate = format(date, 'YYYY-MM-DD')
         let selectedItemIndex = parseInt(event.dataTransfer.getData(KEY_SELECTED_ITEM_INDEX))
-        props.updateRecipePlan(selectedItemIndex, formattedDate)
+        props.updateRecipePlan(selectedItemIndex, DateUtil.getISODate(date))
     }
 
     return (
         <div className="recipeplan-container">
             <div className="recipeplan-header">
-                <div className="recipeplan-selector" onClick={() => previousWeek()}>
-                    <svg fill={theme[1]} width="24" height="24" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"/>
-                    </svg>
+                <div className="recipeplan-navigation">
+                    <div className="recipeplan-selector" onClick={() => previousWeek()}>
+                        <img src={ ArrowLeft } alt="Arrow left" style={{ width: '28px', height: '28px' }} />
+                    </div>
+                    <h2 id="title-week">Uke {DateUtil.getWeekNumber(selectedDate)}</h2>
+                    <div className="recipeplan-selector" onClick={() => nextWeek()}>
+                        <img src={ ArrowRight } alt="Arrow right" style={{ width: '28px', height: '28px' }} />
+                    </div>
                 </div>
-                <div className="recipeplan-current">Uke {getISOWeek(selectedDate)}</div>        
-                <div className="recipeplan-selector" onClick={() => nextWeek()}>
-                    <svg fill={theme[1]} width="24" height="24" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/>
-                    </svg>
-                </div>
+                <h4 id="title-weekdays">{DateUtil.getWeekStartUntilWeekEnd(selectedDate)}</h4>
             </div>
             {
                 eachDay(startOfWeek(selectedDate, { weekStartsOn: 1 }), endOfWeek(selectedDate, { weekStartsOn: 1 })).map((date, index) => {
@@ -119,20 +104,14 @@ const WeekPlan = (props: WeekPlanProps) => {
                         return isSameDay(date, item.date)
                     })
 
-                    let weekDayName = getLocalizedDayName(date)
-                    let isLastElement = getDay(date) === 0
+                    let weekDayName = DateUtil.getLocalizedDayName(date)
 
                     return (
-                        <div className="container" key={index}>
-                            <CircleView
-                                isLastElement={isLastElement}
-                                title={weekDayName}
-                                theme={theme[index]}
-                            />
+                        <div className="recipe-container" key={index}>
                             <div className="item-container"
                                 onDragOver={(e) => onDragOver(e)}
                                 onDrop={(e) => onDrop(e, date)}>
-                                {getRecipePlanEvent(recipePlanEvent)}
+                                {getRecipePlanEvent(weekDayName, recipePlanEvent)}
                             </div>
                         </div>
                     )

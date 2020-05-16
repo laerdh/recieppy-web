@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './EmptyItem.css';
-import RoundedButton from '../roundedbutton/RoundedButton';
+import AddIcon from '../../assets/images/add.svg'
 
-interface EmptyItemProps {}
+export interface EmptyItemProps {
+    dayOfWeek: string
+}
 
 const EmptyItem = (props: EmptyItemProps) => {
     const [itemOnTop, setItemOnTop] = useState(false)
@@ -17,11 +19,8 @@ const EmptyItem = (props: EmptyItemProps) => {
             onDragEnter={() => handleItemOnTop()} 
             onDragLeave={() => handleItemOnTop()}
             >
-            <div className="empty-item-content">
-                <RoundedButton
-                    title={'Legg til måltid'}
-                />
-            </div>
+            <img id="add-item" src={AddIcon} alt="Legg til" />
+            <p>{ props.dayOfWeek }</p>
         </div>
     )
 }

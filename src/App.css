@@ -30,21 +30,9 @@ html, body, #root {
   color: #61dafb;
 }
 
-.container {
-  display: flex;
-  align-self: center;
-  justify-content: flex-start;
-}
-
 .content-container {
   display: flex;
   flex-direction: column;
   align-self: center;
   padding: 24px;
-}
-
-.item-container {
-  display: flex;
-  padding-top: 16px;
-  padding-bottom: 16px;
 }
