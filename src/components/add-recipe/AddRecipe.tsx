@@ -15,7 +15,7 @@ export interface AddRecipeProps {
 const AddRecipe = ({ state, fetchRecipes, addRecipe }: AddRecipeProps) => {
 
     useEffect(() => {
-        if (state.items.length === 0 && !state.isLoading) {
+        if (state.recipeItems.length === 0 && !state.isLoading) {
             fetchRecipes()
         }
     })
@@ -30,9 +30,9 @@ const AddRecipe = ({ state, fetchRecipes, addRecipe }: AddRecipeProps) => {
                     state.isLoading ?
                         <Spinner />
                         :
-                        state.items.map(recipe => {
+                        state.recipeItems.map(recipe => {
                             return (
-                                <CardView key={recipe.id} type={CardViewType.Small} imageUrl={recipe.imageUrl} onClick={() => { addRecipe(Number(recipe.id)) }}>
+                                <CardView key={recipe.id} type={CardViewType.Small} imageUrl={recipe.imageUrl} onClick={() => { addRecipe(recipe.id) }}>
                                     <h3 className={styles.cardTitle}>{recipe.title}</h3>
                                     <p className={styles.cardCreatedBy}>{recipe.createdBy}</p>
                                 </CardView>

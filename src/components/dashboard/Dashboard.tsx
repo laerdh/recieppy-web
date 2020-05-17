@@ -8,8 +8,7 @@ export const Dashboard = (props: any) => {
         <RecipeConsumer>
           { state => (
             <WeekPlan
-              isLoading={state.isLoading}
-              recipePlan={state.recipePlan}
+              state={state.recipePlan}
               fetchRecipePlan={state.fetchRecipePlan}
               updateRecipePlan={state.updateRecipePlan}
               addRecipe={state.addRecipe}

@@ -4,20 +4,18 @@ import ArrowLeft from '../../assets/images/arrow_left.svg'
 import ArrowRight from '../../assets/images/arrow_right.svg'
 import EmptyItem from '../emptyitem/EmptyItem';
 import { isSameDay, getISOWeek, addWeeks, subWeeks, eachDay, startOfWeek, endOfWeek } from 'date-fns';
-import { RecipePlan } from '../../models/RecipePlan';
 import { RecipePlanEvent } from '../../models/RecipePlanEvent';
 import DraggableCardView from '../card/DraggableCardView';
 import { CardViewType } from '../card/CardView';
 import { DateUtil } from './DateUtil';
 import Modal from '../modal/Modal';
 import AddRecipe from '../add-recipe/AddRecipe';
-import { RecipeConsumer } from '../../context/RecipeContext';
+import { RecipeConsumer, RecipePlanState } from '../../context/RecipeContext';
 
 const KEY_SELECTED_ITEM_INDEX = 'selectedItemIndex'
 
 type WeekPlanProps = {
-    isLoading: boolean,
-    recipePlan: RecipePlan,
+    state: RecipePlanState,
     fetchRecipePlan: (weekNumber: number) => void,
     updateRecipePlan: (itemIndex: number, date: string) => void
     addRecipe: (recipeId: number, date: string) => void
@@ -28,7 +26,7 @@ interface AddRecipeModalState {
     showModal: boolean
 }
 
-const WeekPlan = (props: WeekPlanProps) => {
+const WeekPlan = ({ state, fetchRecipePlan, updateRecipePlan, addRecipe }: WeekPlanProps) => {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [modalState, setModalState] = useState<AddRecipeModalState>({ date: new Date(), showModal: false})
 
@@ -46,7 +44,7 @@ const WeekPlan = (props: WeekPlanProps) => {
     }, [selectedDate])
 
     useEffect(() => {
-        props.fetchRecipePlan(getISOWeek(selectedDate))
+        fetchRecipePlan(getISOWeek(selectedDate))
 
         window.addEventListener('keydown', handleKeyDown)
 
@@ -76,7 +74,7 @@ const WeekPlan = (props: WeekPlanProps) => {
                     description={weekDayName}
                     url={recipe.url}
                     imageUrl={recipe.imageUrl}
-                    onDragStart={ (event: React.DragEvent) => onDragStart(event, props.recipePlan.events.indexOf(item))} />
+                    onDragStart={ (event: React.DragEvent) => onDragStart(event, state.recipePlan.events.indexOf(item))} />
             )
         }
 
@@ -93,11 +91,11 @@ const WeekPlan = (props: WeekPlanProps) => {
 
     function onDrop(event: React.DragEvent, date: Date) {
         let selectedItemIndex = parseInt(event.dataTransfer.getData(KEY_SELECTED_ITEM_INDEX))
-        props.updateRecipePlan(selectedItemIndex, DateUtil.getISODate(date))
+        updateRecipePlan(selectedItemIndex, DateUtil.getISODate(date))
     }
 
-    function addRecipe(recipeId: number) {
-        props.addRecipe(recipeId, DateUtil.getISODate(modalState.date))
+    function addRecipePlanEvent(recipeId: number) {
+        addRecipe(recipeId, DateUtil.getISODate(modalState.date))
         setModalState({ ...modalState, showModal: !modalState.showModal })
     }
 
@@ -121,7 +119,7 @@ const WeekPlan = (props: WeekPlanProps) => {
                     <Modal onModalClicked={() => setModalState({ ...modalState, showModal: !modalState.showModal })}>
                         <RecipeConsumer>
                             { state => (
-                                <AddRecipe fetchRecipes={state.fetchRecipes} addRecipe={addRecipe} state={state.recipes} />
+                                <AddRecipe fetchRecipes={state.fetchRecipes} addRecipe={addRecipePlanEvent} state={state.recipes} />
                             )}
                         </RecipeConsumer>
                     </Modal>
@@ -129,7 +127,7 @@ const WeekPlan = (props: WeekPlanProps) => {
 
             {
                 eachDay(startOfWeek(selectedDate, { weekStartsOn: 1 }), endOfWeek(selectedDate, { weekStartsOn: 1 })).map((date, index) => {
-                    let recipePlanEvent = props.recipePlan.events.find((item) => {
+                    let recipePlanEvent = state.recipePlan.events.find((item) => {
                         return isSameDay(date, item.date)
                     })
 

@@ -139,7 +139,6 @@ class ApiService {
 
             try {
                 let result = await instance.post(this.BASE_URL, { query })
-                console.log(result)
                 const newRecipePlanEvents = result.data.data['newRecipePlanEvent']
                 resolve(newRecipePlanEvents)
             } catch (error) {

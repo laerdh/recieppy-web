@@ -1,7 +1,7 @@
 import { Tag } from "./Tag";
 
 export interface Recipe {
-    id: string
+    id: number
     title: string
     imageUrl?: string
     site?: string

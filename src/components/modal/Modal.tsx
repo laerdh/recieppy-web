@@ -12,7 +12,9 @@ const Modal: FunctionComponent<ModalProps> = ({ children, onModalClicked }) => {
         <CSSTransitionGroup
             transitionName={styles}
             transitionAppear={true}
-            transitionAppearTimeout={500}>
+            transitionAppearTimeout={500}
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={500}>
             <Backdrop clicked={onModalClicked} />
             <div className={styles.modal}>
                 {children}

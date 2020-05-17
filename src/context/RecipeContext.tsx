@@ -6,18 +6,23 @@ import { Recipe } from "../models/Recipe";
 import { RecipePlanEvent } from "../models/RecipePlanEvent";
 
 export type RecipeAction =
-    | { type: 'SetLoading', isLoading: boolean }
+    | { type: 'SetRecipePlanLoading', isLoading: boolean }
+    | { type: 'SetRecipeItemsLoading', isLoading: boolean }
     | { type: 'SetRecipePlan', recipePlan: RecipePlan }
-    | { type: 'SetRecipeItems', isLoading: boolean, recipes: Recipe[] }
+    | { type: 'SetRecipeItems', recipes: Recipe[] }
 
 export interface RecipeItemsState {
     isLoading: boolean
-    items: Recipe[]
+    recipeItems: Recipe[]
+}
+
+export interface RecipePlanState {
+    isLoading: boolean
+    recipePlan: RecipePlan
 }
 
 export interface RecipeState {
-    isLoading: boolean
-    recipePlan: RecipePlan
+    recipePlan: RecipePlanState
     recipes: RecipeItemsState
     fetchRecipePlan: (weekNumber: number) => void
     updateRecipePlan: (itemIndex: number, date: string) => void
@@ -26,14 +31,16 @@ export interface RecipeState {
 }
 
 const initialState: RecipeState = {
-    isLoading: true,
     recipePlan: {
-        weekNumber: getISOWeek(new Date()),
-        events: []
+        isLoading: true,
+        recipePlan: {
+            weekNumber: getISOWeek(new Date()),
+            events: []
+        }
     },
     recipes: {
         isLoading: false,
-        items: [] 
+        recipeItems: [] 
     },
     fetchRecipePlan: () => {},
     updateRecipePlan: () => {},
@@ -43,27 +50,36 @@ const initialState: RecipeState = {
 
 function reducer(state: RecipeState, action: RecipeAction): RecipeState {
     switch (action.type) {
-        case 'SetLoading':
+        case 'SetRecipePlanLoading':
             return {
                 ...state,
-                isLoading: action.isLoading
+                recipePlan: {
+                    isLoading: action.isLoading,
+                    ...state.recipePlan
+                }
+            }
+        case 'SetRecipeItemsLoading':
+            return {
+                ...state,
+                recipes: {
+                    isLoading: action.isLoading,
+                    ...state.recipes
+                }
             }
         case 'SetRecipePlan':
             return {
                 ...state,
-                isLoading: false,
-                recipePlan: action.recipePlan,
-                recipes: {
-                    ...state.recipes,
-                    isLoading: false
+                recipePlan: {
+                    isLoading: false,
+                    recipePlan: action.recipePlan
                 }
             }
         case 'SetRecipeItems':
             return {
                 ...state,
                 recipes: {
-                    isLoading: action.isLoading,
-                    items: action.recipes
+                    isLoading: false,
+                    recipeItems: action.recipes
                 }
             }
         default:
@@ -79,19 +95,19 @@ export const RecipeProvider = (props: any) => {
     const [state, dispatch] = React.useReducer(reducer, initialState)
 
     const fetchRecipePlan = (weekNumber: number) => {
-        dispatch({ type: 'SetLoading', isLoading: true })
+        dispatch({ type: 'SetRecipePlanLoading', isLoading: true })
         
         apiService.fetchRecipePlan(weekNumber).then(recipePlan => {
             dispatch({ type: 'SetRecipePlan', recipePlan: recipePlan})
         })
         .catch(error => {
             console.log('Failed to load recipe plan', error)
-            dispatch({ type: 'SetLoading', isLoading: false })
+            dispatch({ type: 'SetRecipePlanLoading', isLoading: false })
         })
     }
 
     const updateRecipePlan = (itemIndex: number, newDate: string) => {
-        const recipePlanEvent = state.recipePlan.events[itemIndex]
+        const recipePlanEvent = state.recipePlan.recipePlan.events[itemIndex]
 
         apiService.updateRecipePlan(recipePlanEvent, newDate).then(recipePlan => {
             dispatch({ type: 'SetRecipePlan', recipePlan })
@@ -102,21 +118,26 @@ export const RecipeProvider = (props: any) => {
     }
 
     const fetchRecipes = () => {
-        dispatch({ type: 'SetRecipeItems', isLoading: true, recipes: [] })
+        dispatch({ type: 'SetRecipeItemsLoading', isLoading: true })
 
         apiService.fetchRecipes(1).then(recipes => {
-            console.log('Fetched recipes', recipes)
-            dispatch({ type: 'SetRecipeItems', isLoading: false, recipes: recipes })
+            dispatch({ type: 'SetRecipeItems', recipes: recipes })
         })
         .catch(error => {
             console.log('Failed to fetch recipes', error)
+            dispatch({ type: 'SetRecipeItemsLoading', isLoading: false })
         })
     }
 
     const addRecipe = (recipeId: number, date: string) => {
-        dispatch({ type: 'SetRecipeItems', isLoading: true, recipes: [...state.recipes.items] })
+        dispatch({ type: 'SetRecipePlanLoading', isLoading: true })
 
-        const recipe = state.recipes.items.find(item => item.id === String(recipeId))
+        const recipe = state.recipes.recipeItems.find(item => item.id === recipeId)
+        
+        if (recipe == undefined) {
+            return
+        }
+
         const newRecipePlanEvent: RecipePlanEvent = { date: date, recipe: recipe!!}
 
         apiService.addRecipeToRecipePlan(newRecipePlanEvent).then(recipePlan => {
@@ -124,6 +145,7 @@ export const RecipeProvider = (props: any) => {
         })
         .catch(error => {
             console.log('Failed to add recipe event', error)
+            dispatch({ type: 'SetRecipePlanLoading', isLoading: false })
         })
     }
 
