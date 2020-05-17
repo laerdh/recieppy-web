@@ -1,26 +1,28 @@
-import './CardView.css'
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import Overlay from './Overlay'
 import CardViewUtil from './CardViewUtil'
 
 export enum CardViewType {
     Default,
+    Small,
     Promo
 }
 
 export interface CardViewProps {
     type: CardViewType
-    title: string
-    description: string
     imageUrl?: string
+    onClick?: () => void
 }
 
-const CardView = (props: CardViewProps) => {
+const CardView: FunctionComponent<CardViewProps> = ({ type, imageUrl, onClick, children }) => {
     return (
         <div
-            className={CardViewUtil.cardClass(props.type)}
-            style={{ backgroundImage: "url(" + props.imageUrl + ")"}}>
-                <Overlay title={props.title} description={props.description} />
+            className={CardViewUtil.cardClass(type)}
+            style={{ backgroundImage: `url("${imageUrl}")`}}
+            onClick={() => onClick?.()}>
+                <Overlay style={CardViewUtil.overlayStyle(type)}>
+                    { children }
+                </Overlay>
         </div>
     )
 }

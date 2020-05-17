@@ -7,7 +7,13 @@ export const Dashboard = (props: any) => {
       <RecipeProvider>
         <RecipeConsumer>
           { state => (
-            <WeekPlan isLoading={state.isLoading} recipePlan={state.recipePlan} fetchRecipePlan={state.fetchRecipePlan} updateRecipePlan={state.updateRecipePlan} />
+            <WeekPlan
+              isLoading={state.isLoading}
+              recipePlan={state.recipePlan}
+              fetchRecipePlan={state.fetchRecipePlan}
+              updateRecipePlan={state.updateRecipePlan}
+              addRecipe={state.addRecipe}
+              />
           )}
         </RecipeConsumer>
       </RecipeProvider>

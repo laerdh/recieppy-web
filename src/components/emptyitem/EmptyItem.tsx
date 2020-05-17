@@ -4,6 +4,7 @@ import AddIcon from '../../assets/images/add.svg'
 
 export interface EmptyItemProps {
     dayOfWeek: string
+    showAddRecipeModal: () => void
 }
 
 const EmptyItem = (props: EmptyItemProps) => {
@@ -19,7 +20,7 @@ const EmptyItem = (props: EmptyItemProps) => {
             onDragEnter={() => handleItemOnTop()} 
             onDragLeave={() => handleItemOnTop()}
             >
-            <img id="add-item" src={AddIcon} alt="Legg til" />
+            <img id="add-item" src={AddIcon} alt="Legg til" onClick={props.showAddRecipeModal} />
             <p>{ props.dayOfWeek }</p>
         </div>
     )

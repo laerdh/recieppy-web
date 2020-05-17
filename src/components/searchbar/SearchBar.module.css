@@ -1,0 +1,25 @@
+.innerAddon {
+    position: relative;
+}
+
+.leftAddon {
+    display: flex;
+}
+
+.input {
+    flex: 1;
+    padding-left: 32px;
+    background: #F4F5F7;
+    border: none;
+    height: 32px;
+    border-radius: 6px;
+}
+
+.searchIcon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 9px;
+    width: 16px;
+    height: 16px;
+}

@@ -36,3 +36,10 @@ html, body, #root {
   align-self: center;
   padding: 24px;
 }
+
+.divider {
+  width: 45px;
+  height: 4px;
+  background: #D9B0A7;
+  border-radius: 2px;
+}

@@ -1,23 +1,25 @@
-.card-container {
+.baseCard {
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
     min-height: 120px;
+    min-width: 120px;   
     margin: 8px;
     border-radius: 12px;
     overflow-y: hidden;
     background-size: cover;
     background-repeat: no-repeat;
+    cursor: pointer;
 }
 
-.promo-card {
-    align-items: stretch;
+.promoCard {
+    flex: 1 1 initial;
     flex-direction: column;
     width: 375px;
     height: 554px;
 }
 
-.default-card {
+.defaultCard {
     position: relative;
     align-items: stretch;
     flex-direction: column;
@@ -25,10 +27,17 @@
     height: 24vh;
     box-shadow: 0px 1.5px 4px 1px #c4c4c4;
     margin: 0;
-    cursor: pointer;
 }
 
-.open-external {
+.smallCard {
+    flex: 1 1 auto;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 8vw;
+    height: 8vw;
+}
+
+.openExternal {
     position: absolute;
     top: 8px;
     right: 8px;
@@ -39,14 +48,26 @@
 }
 
 @media screen and (min-width: 700px) and (max-width: 1200px) {
-    .default-card {
+    .defaultCard {
         width: 80%;
         height: 32vh;
     }
 }
 
 @media screen and (min-width: 1201px) {
-    .default-card {
+    .defaultCard {
         width: 50%;
     }
+}
+
+/* Overlay */
+
+.overlayTitle {
+    margin: 0;
+    font-size: 20px;
+}
+
+.overlayDescription {
+    margin: 4px 0 0 0;
+    font-size: 12px;
 }

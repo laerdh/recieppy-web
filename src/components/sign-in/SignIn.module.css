@@ -1,4 +1,4 @@
-.signin-container {
+.container {
     font-family: 'Avenir';
     display: flex;
     flex-direction: row;
@@ -22,13 +22,13 @@
     padding: 40px;
 }
 
-.signin-title {
+.title {
     font-size: 80px;
     margin: 0;
     padding: 16px 0;
 }
 
-.signin-description {
+.description {
     margin: 0;
     padding: 16px 0;
     font-size: 26px;
@@ -36,25 +36,24 @@
     font-weight: 800;
 }
 
-.divider {
-    width: 45px;
-    height: 4px;
-    background: #D9B0A7;
-    border-radius: 2px;
-}
-
-.buttongroup {
+.buttonGroup {
     display: flex;
     flex-direction: row;
     margin: -16px;
     padding: 48px 0;
 }
 
-.buttongroup.signedin {
-    flex-direction: column;
+.overlayTitle {
+    margin: 0;
+    font-size: 20px;
 }
 
-@media screen and (min-width: 600px) {
+.overlayDescription {
+    margin: 4px 0 0 0;
+    font-size: 12px;
+}
+
+@media screen and (min-width: 900px) {
     .signin {
         order: 1;
     }

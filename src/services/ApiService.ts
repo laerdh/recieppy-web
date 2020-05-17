@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { RecipePlan } from '../models/RecipePlan'
 import { RecipePlanEvent } from '../models/RecipePlanEvent'
+import { METADATA_OIDC, CLIENT_ID } from '../config/AuthConst'
+import { Recipe } from '../models/Recipe'
 
 export interface TokenData {
     access_token: string
@@ -38,10 +40,41 @@ class ApiService {
 
     constructor() {
         instance.interceptors.request.use(async (config: AxiosRequestConfig) => {
-            const tokenData: TokenData = JSON.parse(sessionStorage.getItem('oidc.user:http://localhost:8080/auth/realms/ledahl:recieppy-web') ?? '')
+            const tokenData: TokenData = JSON.parse(sessionStorage.getItem(`oidc.user:${METADATA_OIDC.issuer}:${CLIENT_ID}`) ?? '')
             config.headers['Authorization'] = `Bearer ${tokenData.access_token}`
             config.headers['Content-Type'] = 'application/json'
             return config
+        })
+    }
+
+    fetchRecipes = async (locationId: number): Promise<Recipe[]> => {
+        return new Promise(async (resolve, reject) => {
+
+            const query = `
+                query GetRecipes {
+                    recipes(locationId: ${locationId}) {
+                        id
+                        title
+                        imageUrl
+                        url
+                        shared
+                        created
+                        createdBy
+                        tags {
+                            id
+                            text
+                        }
+                    }
+                }
+            `
+
+            try {
+                let result = await instance.post(this.BASE_URL, { query })
+                const recipes = result.data.data['recipes']
+                resolve(recipes)
+            } catch (error) {
+                reject(error)
+            }
         })
     }
 
@@ -85,6 +118,30 @@ class ApiService {
                 let result = await instance.post(this.BASE_URL, { query })
                 const updatedRecipePlan = result.data.data['updateRecipePlanEvent']
                 resolve(updatedRecipePlan)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    addRecipeToRecipePlan = async (recipePlanEvent: RecipePlanEvent): Promise<RecipePlan> => {
+        return new Promise(async (resolve, reject) => {
+            const locationId = 1
+
+            const query = `
+                mutation NewRecipePlanEvent {
+                    newRecipePlanEvent(locationId: ${locationId}, recipePlanEvent: { recipeId: ${recipePlanEvent.recipe.id}, currentDate: "${recipePlanEvent.date}" }) {
+                        weekNumber
+                        ${RecipePlanEventFragment}
+                    }
+                }
+            `.replace('\n', '').trim()
+
+            try {
+                let result = await instance.post(this.BASE_URL, { query })
+                console.log(result)
+                const newRecipePlanEvents = result.data.data['newRecipePlanEvent']
+                resolve(newRecipePlanEvents)
             } catch (error) {
                 reject(error)
             }
