@@ -146,6 +146,29 @@ class ApiService {
             }
         })
     }
+
+    removeRecipe = async (recipeId: number, date: string): Promise<RecipePlan> => {
+        return new Promise(async (resolve, reject) => {
+            const locationId = 1
+
+            const query = `
+                mutation DeleteRecipePlanEvent {
+                    deleteRecipePlanEvent(locationId: ${locationId}, recipePlanEvent: { recipeId: ${recipeId}, currentDate: "${date}" }) {
+                        weekNumber
+                        ${RecipePlanEventFragment}
+                    }
+                }
+            `.replace('\n', '').trim()
+
+            try {
+                let result = await instance.post(this.BASE_URL, { query })
+                const deleteRecipePlanEvent = result.data.data['deleteRecipePlanEvent']
+                resolve(deleteRecipePlanEvent)
+            } catch(error) {
+                reject(error)
+            }
+        })
+    }
 }
 
 const apiService = new ApiService()

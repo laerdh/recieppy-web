@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState, FunctionComponent } from 'react'
 import styles from './CardView.module.css'
 import Overlay from './Overlay'
-import ExternalLink from '../../assets/images/external_link.svg'
 import { CardViewType } from './CardView'
 import CardViewUtil from './CardViewUtil'
 
@@ -9,24 +8,27 @@ export interface DraggableCardViewProps {
     type: CardViewType
     title: string
     description?: string
-    url: string
     imageUrl?: string
     onDragStart: (event: React.DragEvent) => void
 }
 
-const DraggableCardView = (props: DraggableCardViewProps) => {    
+const DraggableCardView: FunctionComponent<DraggableCardViewProps> = ({ type, title, description, imageUrl, onDragStart, children }) => {
+    const [isMenuVisible, setIsMenuVisible] = useState(false)
+    
+    function toggleMenu() {
+        setIsMenuVisible(!isMenuVisible)
+    }
+
     return (
         <div
-            className={CardViewUtil.cardClass(props.type)}
-            style={{ backgroundImage: `url("${props.imageUrl}")`}}
-            onDragStart={(event: React.DragEvent) => props.onDragStart(event)}
+            className={CardViewUtil.cardClass(type)}
+            style={{ backgroundImage: `url("${imageUrl}")`}}
+            onDragStart={(event: React.DragEvent) => onDragStart(event)}
             draggable>
-                <div className={styles.openExternal} onClick={() => window.open(props.url, '_blank')}>
-                    <img src={ExternalLink} alt="Ekstern lenke" />
-                </div>
+                { children }
                 <Overlay style={{ flex: '1 1 initial', padding: 16 }}>
-                    <h3 className={styles.overlayTitle}>{props.title}</h3>
-                    <p className={styles.overlayDescription}>{props.description}</p>
+                    <h3 className={styles.overlayTitle}>{title}</h3>
+                    <p className={styles.overlayDescription}>{description}</p>
                 </Overlay>
         </div>
     )

@@ -15,7 +15,10 @@ const Modal: FunctionComponent<ModalProps> = ({ children, onModalClicked }) => {
             transitionAppearTimeout={500}
             transitionEnterTimeout={500}
             transitionLeaveTimeout={500}>
-            <Backdrop clicked={onModalClicked} />
+            <Backdrop
+                style={{ background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.56) 100%)' }}
+                clicked={onModalClicked}
+            />
             <div className={styles.modal}>
                 {children}
             </div>

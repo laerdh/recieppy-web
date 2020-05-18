@@ -11,6 +11,9 @@ import { DateUtil } from './DateUtil';
 import Modal from '../modal/Modal';
 import AddRecipe from '../add-recipe/AddRecipe';
 import { RecipeConsumer, RecipePlanState } from '../../context/RecipeContext';
+import DropdownMenu from '../dropdown-menu/DropdownMenu';
+import { OpenInNewRounded, DeleteOutlineRounded } from '@material-ui/icons';
+import DropdownMenuItem from '../dropdown-menu/DropdownMenuItem';
 
 const KEY_SELECTED_ITEM_INDEX = 'selectedItemIndex'
 
@@ -19,6 +22,7 @@ type WeekPlanProps = {
     fetchRecipePlan: (weekNumber: number) => void,
     updateRecipePlan: (itemIndex: number, date: string) => void
     addRecipe: (recipeId: number, date: string) => void
+    removeRecipe: (recipeId: number, date: string) => void
 }
 
 interface AddRecipeModalState {
@@ -26,7 +30,7 @@ interface AddRecipeModalState {
     showModal: boolean
 }
 
-const WeekPlan = ({ state, fetchRecipePlan, updateRecipePlan, addRecipe }: WeekPlanProps) => {
+const WeekPlan = ({ state, fetchRecipePlan, updateRecipePlan, addRecipe, removeRecipe }: WeekPlanProps) => {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [modalState, setModalState] = useState<AddRecipeModalState>({ date: new Date(), showModal: false})
 
@@ -66,15 +70,24 @@ const WeekPlan = ({ state, fetchRecipePlan, updateRecipePlan, addRecipe }: WeekP
 
         if (item) {
             const recipe = item.recipe
+            const dateString = DateUtil.getISODate(date)
 
             return (
                 <DraggableCardView
                     type={CardViewType.Default}
                     title={recipe.title}
                     description={weekDayName}
-                    url={recipe.url}
                     imageUrl={recipe.imageUrl}
-                    onDragStart={ (event: React.DragEvent) => onDragStart(event, state.recipePlan.events.indexOf(item))} />
+                    onDragStart={ (event: React.DragEvent) => onDragStart(event, state.recipePlan.events.indexOf(item))}>
+                    <DropdownMenu>
+                        <DropdownMenuItem title="Åpne" onClick={() => window.open(recipe.url, '_blank')}>
+                            <OpenInNewRounded style={{ color: '#3D3D3D', width: 18, height: 18, padding: '0 8px 0 8px' }} />
+                        </DropdownMenuItem>
+                        <DropdownMenuItem title="Slett" onClick={() => removeRecipe(recipe.id, dateString)}>
+                            <DeleteOutlineRounded style={{ color: '#3D3D3D', width: 18, height: 18, padding: '0 8px 0 8px' }} />
+                        </DropdownMenuItem>
+                    </DropdownMenu>
+                </DraggableCardView>
             )
         }
 

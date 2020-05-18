@@ -12,6 +12,7 @@ export const Dashboard = (props: any) => {
               fetchRecipePlan={state.fetchRecipePlan}
               updateRecipePlan={state.updateRecipePlan}
               addRecipe={state.addRecipe}
+              removeRecipe={state.removeRecipe}
               />
           )}
         </RecipeConsumer>

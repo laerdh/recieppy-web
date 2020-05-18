@@ -19,7 +19,7 @@ const CardView: FunctionComponent<CardViewProps> = ({ type, imageUrl, onClick, c
         <div
             className={CardViewUtil.cardClass(type)}
             style={{ backgroundImage: `url("${imageUrl}")`}}
-            onClick={() => onClick?.()}>
+            onClick={onClick}>
                 <Overlay style={CardViewUtil.overlayStyle(type)}>
                     { children }
                 </Overlay>

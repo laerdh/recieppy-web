@@ -28,6 +28,7 @@ export interface RecipeState {
     updateRecipePlan: (itemIndex: number, date: string) => void
     fetchRecipes: () => void
     addRecipe: (recipeId: number, date: string) => void
+    removeRecipe: (recipeId: number, date: string) => void
 }
 
 const initialState: RecipeState = {
@@ -45,7 +46,8 @@ const initialState: RecipeState = {
     fetchRecipePlan: () => {},
     updateRecipePlan: () => {},
     fetchRecipes: () => {},
-    addRecipe: () => {}
+    addRecipe: () => {},
+    removeRecipe: () => {}
 };
 
 function reducer(state: RecipeState, action: RecipeAction): RecipeState {
@@ -149,6 +151,17 @@ export const RecipeProvider = (props: any) => {
         })
     }
 
+    const removeRecipe = (recipeId: number, date: string) => {
+        dispatch({ type: 'SetRecipePlanLoading', isLoading: true })
+
+        apiService.removeRecipe(recipeId, date).then(recipePlan => {
+            dispatch({ type: 'SetRecipePlan', recipePlan: recipePlan })
+        }).catch(error => {
+            console.log('Failed to remove recipe event', error)
+            dispatch({ type: 'SetRecipePlanLoading', isLoading: false })
+        })
+    }
+
     return (
         <RecipeContext.Provider
             value={{
@@ -156,7 +169,8 @@ export const RecipeProvider = (props: any) => {
                 fetchRecipePlan,
                 updateRecipePlan,
                 fetchRecipes,
-                addRecipe
+                addRecipe,
+                removeRecipe
             }}>
             {props.children}
         </RecipeContext.Provider>

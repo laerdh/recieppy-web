@@ -37,16 +37,6 @@
     height: 8vw;
 }
 
-.openExternal {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 8px;
-    border-radius: 4px;
-    align-self: flex-end;
-    flex: 2 0 auto;
-}
-
 @media screen and (min-width: 700px) and (max-width: 1200px) {
     .defaultCard {
         width: 80%;
