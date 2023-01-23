@@ -1,0 +1,21 @@
+.menuContainer {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.dropdownContent {
+    position: absolute;
+    right: 1%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 2px;
+    background: white;
+    z-index: 1000;
+    text-align: center;
+}
